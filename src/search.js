@@ -47,9 +47,19 @@ export class ElementSearcher {
       return;
     }
 
+    const safeQuery = this._escapeRegex(query);
+    const regexQuery = new RegExp(`(\\s|^)${safeQuery}(\\s|$)`, 'i');
+
     this._nodes.forEach((element, id) => {
-      if (this._textNodes.get(id).includes(query)) { this._showElement(element); }
+      const text = this._textNodes.get(id);
+
+      // Any matches
+      if (text.includes(query)) { this._showElement(element); }
       else { this._hideElement(element); }
+
+      // Exact matches
+      if (query.length < 2) return;
+      if (regexQuery.test(text)) console.log(element);
     });
   }
 
@@ -112,5 +122,17 @@ export class ElementSearcher {
     }
 
     return textNodes;
+  }
+
+  /**
+   * Escapes any regex character in a string.
+   *
+   * @param {string} string
+   * @return {string}
+   *
+   * @see https://stackoverflow.com/a/3561711
+   */
+  _escapeRegex(string) {
+    return string.replace(/[-/\\^$*+?.()|[\]{}]/g, '\\$&');
   }
 }

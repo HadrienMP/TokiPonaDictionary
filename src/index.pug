@@ -13,6 +13,12 @@ head
   main
     #search-box
       input(type='text' id='search' autofocus='true' placeholder='o lukin' autocorrect='off' autocapitalize='off' spellcheck='false')
+    .exact-matches
+      each word in dictionary
+        .exact-word #{word.word}:
+          each meaning in word.meanings
+            span.speech-type=meaning[0]
+            span=meaning[1]
     .dictionary-words
       each word in dictionary
         .word
